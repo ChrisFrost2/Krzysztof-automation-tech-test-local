@@ -1,0 +1,37 @@
+{
+  "name": "playwright-basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.3"
+  },
+  "scripts": {
+    "ui": "npx playwright test --ui",
+    "test": "npx playwright test --reporter=html",
+    "headed": "npx playwright test --headed",
+    "report": "npx playwright show-report",
+    "smoke": "npx playwright test -g \"@smoke\"",
+    "only": "npx playwright test -g \"@only\"",
+    "notOnly": "npx playwright test -gv @only",
+    "singleTest": "npx playwright test tests/login.spec.ts",
+    "multipleTests": "npx playwright test tests/login.spec.ts tests/withPoms/",
+    "debug": "npx playwright test --debug",
+    "list": "npx playwright test --list",
+    "last-failed": "npx playwright test --last-failed",
+    "tagWebOrUi": "npx playwright test --grep \"@web|@ui\"",
+    "selected": "npx playwright test --grep \"@feature-appointments\" --grep-invert \"@readonly\"",
+    "update-snapshots": "npx playwright test --update-snapshots",
+    "api": "npx playwright test --project=chromium -g \"@api\"",
+    "not-api": "npx playwright test --project=\"chromium with setup\" -gv \"@api\""
+  },
+  "dependencies": {
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.5.0"
+  }
+}
