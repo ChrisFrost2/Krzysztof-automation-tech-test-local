@@ -33,6 +33,6 @@ export class LoginPage extends BasePage {
   }
 
   async errorMessagePresented(message?: string) {
-    await expect(this.page.locator('div.alert-text').filter({ hasText: `${message}` })).toBeVisible({ timeout: 30000 });    
+    await expect(this.page.locator('span.alert-text').filter({ hasText: `${message}` })).toBeVisible({ timeout: 30000 });    
   }
 }
