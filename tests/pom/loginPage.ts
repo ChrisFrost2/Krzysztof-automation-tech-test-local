@@ -13,7 +13,7 @@ export class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page, '');
-    this.username_input = page.locator("#user-name");
+    this.username_input = page.locator("#username");
     this.password_input = page.locator("#password");
     this.continue_button = page.locator("#continueLogin");
     this.login_button = page.locator("#attemptLogin");
@@ -33,10 +33,6 @@ export class LoginPage extends BasePage {
   }
 
   async errorMessagePresented(message?: string) {
-    // await expect(this.page.getByText('Your email or password was incorrectPlease try again or request a new')).toBeVisible({ timeout: 15000 });
-    // await expect(page.locator('div').filter({ hasText: 'Ok' }).nth(3)).toBeVisible();
-    await expect(this.page.locator('div').filter({ hasText: `${message}` })).toBeVisible({ timeout: 15000 });
-    // await expect(this.page.getByText('Please try again or request a')).toBeVisible();
-    // await expect(this.page.getByText('CancelOk')).toBeVisible();
+    await expect(this.page.locator('div.alert-text').filter({ hasText: `${message}` })).toBeVisible({ timeout: 30000 });    
   }
 }
