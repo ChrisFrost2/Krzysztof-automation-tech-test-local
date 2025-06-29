@@ -1,6 +1,14 @@
-name: Simple tests workflow
+name: API tests workflow
+env:
+  API_KEY: ${{ secrets.API_KEY }}
 on:  
   workflow_dispatch:
+  # workflow_run:
+  #    workflows: [ deployWorkflow ]
+  #    types:
+  #       - completed
+  # schedule:  
+  #   - cron: "30 1 * * 1-5"  
 jobs:
   test:
     timeout-minutes: 30

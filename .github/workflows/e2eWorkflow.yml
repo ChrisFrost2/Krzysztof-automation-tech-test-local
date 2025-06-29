@@ -1,4 +1,4 @@
-name: Simple tests workflow
+name: E2E tests workflow
 on:  
   workflow_dispatch:
 jobs:
