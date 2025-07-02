@@ -15,6 +15,7 @@ test.describe(`API Tests for 'fn-techtest-ase'`, { tag: '@api' }, () => {
         expect(response.status()).toBe(200);
 
         const companies = await response.json();
+        expect(Array.isArray(companies), 'Companies is not an array').toBeTruthy();
         expect(companies.length).toBeGreaterThan(0);
         expect(companies[0]).toHaveProperty("sector");
         expect(companies[0]).toHaveProperty("country");
@@ -46,18 +47,23 @@ test.describe(`API Tests for 'fn-techtest-ase'`, { tag: '@api' }, () => {
         expect([404, 200]).toContain(response.status());
         if (response.status() === 200) {
             const body = await response.json();
+            expect(Array.isArray(body), 'Response body is not an array').toBeTruthy();
             expect(body.length).toBe(0);
         }
     });
 
     test('should return 404 or empty list for missing exchange symbol', async ({ request }) => {
-        const response = await context.get(`/exchanges//companies`);
-
-        expect([404, 200]).toContain(response.status());
-        if (response.status() === 200) {
-            const body = await response.json();
-            expect(body.length).toBe(0);
-        }
+        try {
+            const response = await context.get(`/exchanges//companies`);
+            expect([404, 200]).toContain(response.status());
+            if (response.status() === 200) {
+                const body = await response.json();
+                expect(Array.isArray(body), 'Response body is not an array').toBeTruthy();
+                expect(body.length).toBe(0);
+            }
+        } catch (error) {
+            throw new Error(`Test failed: ${error}`);
+        };
     });
 
     test('should return status code 401 Unauthorized for wrong Api Key', async ({ request }) => {
@@ -67,49 +73,58 @@ test.describe(`API Tests for 'fn-techtest-ase'`, { tag: '@api' }, () => {
 
     // --------------------- extra tests samples for schema  ---------------------
     test('API returns valid company schema - first option', async ({ request }) => {
-        const exchangeSymbol = 'ASX';
-        const response = await context.get(`/exchanges/${exchangeSymbol}/companies`);
-        const companies = await response.json();
-        expect(companies.length).toBeGreaterThan(0);
-        const company = companies.find(c => c.name === 'Genetic Signatures Limited');
-        expect(company).toBeTruthy();
-        
-        expect(company).toHaveProperty("sector");
-        expect(company).toHaveProperty("country");
-        expect(company).toHaveProperty("fullTimeEmployees");
-        expect(company).toHaveProperty("symbol");
-        expect(company).toHaveProperty("name");
-        expect(company).toHaveProperty("price");
-        expect(company).toHaveProperty("exchange");
-        expect(company).toHaveProperty("exchangeShortName");
-        expect(company).toHaveProperty("type");
+        try {
+            const exchangeSymbol = 'ASX';
+            const response = await context.get(`/exchanges/${exchangeSymbol}/companies`);
+            const companies = await response.json();
+            expect(companies.length).toBeGreaterThan(0);
+            const company = companies.find(c => c.name === 'Genetic Signatures Limited');
+            expect(company).toBeTruthy();
 
-        expect(typeof company.name).toBe('string');
-        expect(typeof company.sector).toBe('string');
-        expect(typeof company.fullTimeEmployees).toBe('string');
-        expect(company.symbol).toMatch(/^\w{3}$/);
+            expect(company).toHaveProperty("sector");
+            expect(company).toHaveProperty("country");
+            expect(company).toHaveProperty("fullTimeEmployees");
+            expect(company).toHaveProperty("symbol");
+            expect(company).toHaveProperty("name");
+            expect(company).toHaveProperty("price");
+            expect(company).toHaveProperty("exchange");
+            expect(company).toHaveProperty("exchangeShortName");
+            expect(company).toHaveProperty("type");
+
+            expect(typeof company.name).toBe('string');
+            expect(typeof company.sector).toBe('string');
+            expect(typeof company.fullTimeEmployees).toBe('string');
+            expect(company.symbol).toMatch(/^\w{3}$/);
+        } catch (error) {
+            throw new Error(`Test failed: ${error}`);
+        };
     });
 
     test('API returns valid company schema - second option', async ({ request }) => {
-        const exchangeSymbol = 'ASX';
-        const response = await context.get(`/exchanges/${exchangeSymbol}/companies`);
-        expect(response.status()).toBe(200);
+        try {
+            const exchangeSymbol = 'ASX';
+            const response = await context.get(`/exchanges/${exchangeSymbol}/companies`);
+            expect(response.status()).toBe(200);
 
-        const companies = await response.json();
-        expect(companies.length).toBeGreaterThan(0);
-        const company = companies.find(c => c.name === 'Genetic Signatures Limited');
-        expect(company).toBeTruthy();
+            const companies = await response.json();
+            expect(companies.length).toBeGreaterThan(0);
+            const company = companies.find(c => c.name === 'Genetic Signatures Limited');
+            expect(company).toBeTruthy();
 
-        expect(company).toEqual(expect.objectContaining({
-            "sector": "Basic Materials",
-            "country": "CA",
-            "fullTimeEmployees": "652",
-            "symbol": "GSS",
-            "name": "Genetic Signatures Limited",
-            "price": null,
-            "exchange": "Australian Securities Exchange",
-            "exchangeShortName": "ASX",
-            "type": "stock"
-        }));
+            expect(company).toEqual(expect.objectContaining({
+                "sector": "Basic Materials",
+                "country": "CA",
+                "fullTimeEmployees": "652",
+                "symbol": "GSS",
+                "name": "Genetic Signatures Limited",
+                "price": null,
+                "exchange": "Australian Securities Exchange",
+                "exchangeShortName": "ASX",
+                "type": "stock"
+            }));
+
+        } catch (error) {
+            throw new Error(`Test failed: ${error}`);
+        };
     });
 });
