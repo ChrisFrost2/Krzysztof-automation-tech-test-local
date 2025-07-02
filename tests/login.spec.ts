@@ -9,27 +9,29 @@ test.describe('Login tests', () => {
     });
 
     [
-        { user: 'fake@user.com', password: 'wrongPassword123', message: 'Your email or password was incorrect' },
-        { user: 'fake@user.com', password: '', message: 'Your email or password was incorrect' }
-    ].forEach(({ user, password, message }) => {
+        { user: 'fake@user.com', password: 'wrongPassword123' },
+        { user: 'fake@user.com', password: '' }
+    ].forEach(({ user, password }) => {
         test(`Failed login - should show error on invalid credentials for user '${user}' and '${password}'`, {
             tag: ['@smokeTest', '@login']
         }, async ({ page, loginPage }) => {
             await loginPage.login(user, password);
-            await loginPage.errorMessagePresented(message);
+            await loginPage.errorPresented();
+            await loginPage.errorMessagePresented(`/Your email or password was incorrect|Seu e-mail ou senha estavam incorretos/`);
             await loginPage.userStillOnLogin();
         });
     });
 
     [
-        { user: '', password: '', message: 'Please enter the email address linked to your BoardOutlook profile' },
-        { user: '', password: 'wrongPassword123', message: 'Please enter the email address linked to your BoardOutlook profile' }
-    ].forEach(({ user, password, message }) => {
+        { user: '', password: '' },
+        { user: '', password: 'wrongPassword123' }
+    ].forEach(({ user, password }) => {
         test(`Failed login - should show error on lack of login or password for user '${user}' and '${password}'`, {
             tag: ['@smokeTest', '@login']
         }, async ({ page, loginPage }) => {
             await loginPage.login(user, password);
-            await loginPage.errorMessagePresented('Please enter the email address linked to your BoardOutlook profile');
+            await loginPage.errorPresented();
+            await loginPage.errorMessagePresented(`/Please enter the email address linked to your BoardOutlook profile|Insira o endereço de e-mail vinculado ao seu perfil do BoardOutlook/`);
             await loginPage.userStillOnLogin();
         });
     });

@@ -9,15 +9,16 @@ export class LoginPage extends BasePage {
   readonly continue_button: Locator;
   readonly error_message_container: Locator;
   readonly error_message_ok_button: Locator;
+  readonly error_message_ok: Locator;
   
-
   constructor(page: Page) {
     super(page, '');
     this.username_input = page.locator("#username");
     this.password_input = page.locator("#password");
     this.continue_button = page.locator("#continueLogin");
     this.login_button = page.locator("#attemptLogin");
-    this.error_message_container = page.getByText('Ok');
+    this.error_message_ok = page.getByText(/Ok/i);
+    this.error_message_container = page.locator('#alert-modal');
   }
 
   @step
@@ -33,6 +34,12 @@ export class LoginPage extends BasePage {
   }
 
   async errorMessagePresented(message?: string) {
-    await expect(this.page.locator('span.alert-text').filter({ hasText: `${message}` })).toBeVisible({ timeout: 30000 });    
+    //await expect(this.page.locator('span.alert-text').filter({ hasText: `${message}` })).toBeVisible({ timeout: 30000 });  
+    await expect(this.error_message_container).toBeVisible({ timeout: 30000 });   
+    await expect(this.page.getByText(`${message}`)).toBeVisible({ timeout: 30000 });
+  }
+
+  async errorPresented() {
+    await expect(this.error_message_container).toBeVisible({ timeout: 30000 });    
   }
 }
